@@ -25,6 +25,17 @@ class NorthPanel extends JPanel
 			}
 			});
 		
+		JButton Delete = new JButton("삭제하기");
+		add(Delete);
+		Delete.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				String name = JOptionPane.showInputDialog("삭제할 프로그램의 이름을 입력하세요.");
+				h.remove(name);
+			}
+		});
+		
 	}
 }
 
