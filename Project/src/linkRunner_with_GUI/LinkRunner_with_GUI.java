@@ -6,13 +6,32 @@ import java.awt.event.*;
 import javax.swing.*;
 import java.io.*;
 
+
 class NorthPanel extends JPanel
 {
 	public static HashMap<String, String> h = new HashMap<String, String>();
+	
+	public static void showList()
+{
+	StringBuilder sb = new StringBuilder();
+	Set key = h.keySet();
+	Iterator<String> itr = key.iterator();
+	
+	while(itr.hasNext())
+	{
+		String keyName = itr.next();
+		sb.append(keyName).append("\n");
+	}
+	
+	(CenterPanel.showList).setText(sb.toString());
+}
+	
+	
 	public NorthPanel()
 	{		
 		setBackground(Color.LIGHT_GRAY);
 		setLayout(new FlowLayout());
+		
 		JButton Save = new JButton("저장하기");
 		add(Save);
 		Save.addActionListener(new ActionListener() {
@@ -21,9 +40,11 @@ class NorthPanel extends JPanel
 			{
 					String name = JOptionPane.showInputDialog("저장할 프로그램의 이름을 입력하세요.");
 					String link = JOptionPane.showInputDialog("프로그램의 링크를 입력하세요.");
-					h.put(name, link);
+					if(name.length()!=0)
+						h.put(name, link);
+					showList();
 			}
-			});
+		});
 		
 		JButton Delete = new JButton("삭제하기");
 		add(Delete);
@@ -33,6 +54,7 @@ class NorthPanel extends JPanel
 			{
 				String name = JOptionPane.showInputDialog("삭제할 프로그램의 이름을 입력하세요.");
 				h.remove(name);
+				showList();
 			}
 		});
 		
@@ -41,11 +63,14 @@ class NorthPanel extends JPanel
 
 class CenterPanel extends JPanel
 {
+	public static JTextArea showList = new JTextArea(7,25);
+	
 	public CenterPanel() 
-	{
+	{		
 		JTextField tf = new JTextField(25);
 		add(tf);
-		
+		add(new JScrollPane(showList));
+		showList.setEditable(false);
 		tf.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
@@ -87,7 +112,7 @@ public class LinkRunner_with_GUI extends JFrame {
 		contentPane.add(NPan, BorderLayout.NORTH);
 		contentPane.add(CPan, BorderLayout.CENTER);
 		
-		setSize(300,120);
+		setSize(300,250);
 		setVisible(true);
 	}
 	
