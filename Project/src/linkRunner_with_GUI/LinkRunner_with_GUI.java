@@ -57,7 +57,7 @@ class NorthPanel extends JPanel
 						{
 							String keyName = itr.next();
 							String keyNameLink = h.get(keyName);
-							sb.append(keyName).append(" ").append(keyNameLink).append("\r\n");
+							sb.append(keyName).append("@").append(keyNameLink).append("\r\n");
 							try {
 								PrintWriter NewWriter = new PrintWriter(new FileWriter(Saved), true);
 								NewWriter.printf(sb.toString());
@@ -76,7 +76,7 @@ class NorthPanel extends JPanel
 							try
 							{					
 								PrintWriter Writer = new PrintWriter(new FileWriter(Saved));
-								Writer.println(name+" "+link);
+								Writer.println(name+"@"+link);
 								Writer.flush();
 								Writer.close();
 							}							
@@ -90,7 +90,7 @@ class NorthPanel extends JPanel
 						try
 						{					
 							PrintWriter Writer = new PrintWriter(new FileWriter(Saved, true));
-							Writer.println(name+" "+link);
+							Writer.println(name+"@"+link);
 							Writer.flush();
 							Writer.close();
 						}							
@@ -104,7 +104,7 @@ class NorthPanel extends JPanel
 							BufferedReader Reader = new BufferedReader(new FileReader(Saved));
 							while((s=Reader.readLine())!=null)
 							{
-								sArray=s.split(" ");
+								sArray=s.split("@");
 								h.put(sArray[0],sArray[1]);
 								
 							}
@@ -147,7 +147,7 @@ class NorthPanel extends JPanel
 				{
 					String keyName = itr.next();
 					String keyNameLink = h.get(keyName);
-					sb.append(keyName).append(" ").append(keyNameLink).append("\r\n");
+					sb.append(keyName).append("@").append(keyNameLink).append("\r\n");
 					try 
 					
 					{						
@@ -227,7 +227,7 @@ public class LinkRunner_with_GUI extends JFrame {
 			BufferedReader Reader = new BufferedReader(new FileReader(NorthPanel.Saved));
 			while((NorthPanel.s=Reader.readLine())!=null)
 			{
-				NorthPanel.sArray=NorthPanel.s.split(" ");
+				NorthPanel.sArray=NorthPanel.s.split("@");
 				NorthPanel.h.put(NorthPanel.sArray[0],NorthPanel.sArray[1]);
 			}
 		}
