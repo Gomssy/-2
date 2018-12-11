@@ -1,22 +1,29 @@
 package linkRunner_with_GUI;
 
 import java.util.*;
+import java.util.List;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import java.io.*;
-
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 class NorthPanel extends JPanel
 {
 	public static HashMap<String, String> h = new HashMap<String, String>();
 	
+	static File Saved = new File("Saved.txt");
+	static String s;
+	static String sArray[];
+	
+	
 	public static void showList()
 {
-	StringBuilder sb = new StringBuilder();
+	StringBuilder sb = new StringBuilder();	
 	Set key = h.keySet();
 	Iterator<String> itr = key.iterator();
-	
 	while(itr.hasNext())
 	{
 		String keyName = itr.next();
@@ -40,9 +47,75 @@ class NorthPanel extends JPanel
 			{
 					String name = JOptionPane.showInputDialog("저장할 프로그램의 이름을 입력하세요.");
 					String link = JOptionPane.showInputDialog("프로그램의 링크를 입력하세요.");
-					if(name.length()!=0)
+					if(h.containsKey(name))
+					{
 						h.put(name, link);
+						StringBuilder sb = new StringBuilder();
+						Set key = h.keySet();
+						Iterator<String> itr = key.iterator();
+						while(itr.hasNext())
+						{
+							String keyName = itr.next();
+							String keyNameLink = h.get(keyName);
+							sb.append(keyName).append(" ").append(keyNameLink).append("\r\n");
+							try {
+								PrintWriter NewWriter = new PrintWriter(new FileWriter(Saved), true);
+								NewWriter.printf(sb.toString());
+							} catch (IOException e1) {
+								e1.printStackTrace();
+							}
+						}
+						showList();
+					}
+					else
+					{
+					if(name.length()!=0 && link.length()!=0)
+					{
+						if(h.isEmpty())
+						{
+							try
+							{					
+								PrintWriter Writer = new PrintWriter(new FileWriter(Saved));
+								Writer.println(name+" "+link);
+								Writer.flush();
+								Writer.close();
+							}							
+							catch(Exception e1)
+							{
+								e1.printStackTrace();
+							}
+						}
+						else
+						{
+						try
+						{					
+							PrintWriter Writer = new PrintWriter(new FileWriter(Saved, true));
+							Writer.println(name+" "+link);
+							Writer.flush();
+							Writer.close();
+						}							
+						catch(Exception e1)
+						{
+							e1.printStackTrace();
+						}	
+						}
+						try
+						{
+							BufferedReader Reader = new BufferedReader(new FileReader(Saved));
+							while((s=Reader.readLine())!=null)
+							{
+								sArray=s.split(" ");
+								h.put(sArray[0],sArray[1]);
+								
+							}
+						}
+						catch(Exception e1)
+						{							
+							e1.printStackTrace();
+						}
+					}
 					showList();
+			}
 			}
 		});
 		
@@ -53,11 +126,42 @@ class NorthPanel extends JPanel
 			public void actionPerformed(ActionEvent e)
 			{
 				String name = JOptionPane.showInputDialog("삭제할 프로그램의 이름을 입력하세요.");
-				h.remove(name);
+				h.remove(name);	
+				if(h.isEmpty())
+				{
+					try {
+						PrintWriter NewWriter = new PrintWriter(new FileWriter(Saved), true);
+						NewWriter.println();
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+					
+				}
+				else
+				{
+				Set key = h.keySet();
+				Iterator<String> itr = key.iterator();
+			
+				StringBuilder sb = new StringBuilder();
+				while(itr.hasNext())
+				{
+					String keyName = itr.next();
+					String keyNameLink = h.get(keyName);
+					sb.append(keyName).append(" ").append(keyNameLink).append("\r\n");
+					try 
+					
+					{						
+						PrintWriter NewWriter = new PrintWriter(new FileWriter(Saved),true);
+						NewWriter.printf(sb.toString());
+						
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+				}
+				}
 				showList();
 			}
-		});
-		
+		});		
 	}
 }
 
@@ -118,6 +222,22 @@ public class LinkRunner_with_GUI extends JFrame {
 	
 	public static void main(String args[])
 	{
-		new LinkRunner_with_GUI();
+		try
+		{
+			BufferedReader Reader = new BufferedReader(new FileReader(NorthPanel.Saved));
+			while((NorthPanel.s=Reader.readLine())!=null)
+			{
+				NorthPanel.sArray=NorthPanel.s.split(" ");
+				NorthPanel.h.put(NorthPanel.sArray[0],NorthPanel.sArray[1]);
+			}
+		}
+		catch(Exception e1)
+		{							
+			e1.printStackTrace();
+		}
+	
+		NorthPanel.showList();
+		new LinkRunner_with_GUI();	
+		
 	}
 }
